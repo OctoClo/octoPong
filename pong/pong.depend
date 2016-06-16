@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1466028120 source:e:\informatique\jeux\codeblocksprojects\pong\main.cpp
+	<iostream>
+	<SDL/SDL.h>
+
