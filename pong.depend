@@ -3,3 +3,8 @@
 	<iostream>
 	<SDL/SDL.h>
 
+1466156619 source:e:\informatique\bitbucket\pong\main.cpp
+	<iostream>
+	<SDL/SDL.h>
+	<GL/glew.h>
+
