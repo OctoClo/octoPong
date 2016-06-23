@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -30,7 +32,19 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add directory="E:/Informatique/Jeux/CodeBlocksProjects/Tools/include" />
 		</Compiler>
+		<Linker>
+			<Add library="mingw32" />
+			<Add library="libSDL2" />
+			<Add library="libSDL2main" />
+			<Add library="opengl32" />
+			<Add library="glew32" />
+			<Add directory="E:/Informatique/Jeux/CodeBlocksProjects/Tools/lib" />
+		</Linker>
+		<Unit filename="Pong.cpp" />
+		<Unit filename="Pong.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
