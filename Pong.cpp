@@ -18,8 +18,8 @@ void Pong::run()
     this->finish();
 
     /* // OpenGL context test
-    SDL_GLContext glContext = SDL_GL_CreateContext(window);
-    glewInit();
+
+
 
     glClearColor(0,0,0,1);
 
@@ -46,12 +46,25 @@ void Pong::init()
 {
     // Initialize everything needed by SDL, catch the eventual error
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-        cout << "Error in SDL init : " << SDL_GetError();
+        fatalError("Error in SDL init");
 
     // Open the window
     this->window = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->screenWidth, this->screenHeight, SDL_WINDOW_OPENGL);
     if (!window)
-        cout << "Error in window creation : " << SDL_GetError();
+        fatalError("Error in window creation");
+
+    // Create the OpenGL context
+    SDL_GLContext glContext = SDL_GL_CreateContext(window);
+    if (!glContext)
+        fatalError("Error in OpenGL context creation");
+
+    // Initiate glew
+    if (glewInit() != GLEW_OK)
+        fatalError("Error in glew init");
+
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // Activate the double buffer (1 window being cleared, 1 window being drawn)
+
+    glClearColor(0.4, 0, 0.6, 1);
 }
 
 void Pong::gameLoop()
@@ -60,6 +73,7 @@ void Pong::gameLoop()
     while (this->gameState != exit)
     {
         this->processInput();
+        this-> drawGame();
     }
 }
 
@@ -88,6 +102,15 @@ void Pong::processInput()
             break;
         }
     }
+}
+
+void Pong::drawGame()
+{
+    glClearDepth(1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+    SDL_GL_SwapWindow(this->window);
 }
 
 void Pong::finish()

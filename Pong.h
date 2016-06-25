@@ -1,11 +1,7 @@
 #ifndef PONG_H
 #define PONG_H
 
-#include <SDL/SDL.h>
-#include <GL/glew.h>
-
-#include <iostream>
-using namespace std;
+#include "Errors.h"
 
 enum GameState { play, exit };
 
@@ -20,6 +16,7 @@ class Pong
         void init();
         void gameLoop();
         void processInput();
+        void drawGame();
         void finish();
 
         SDL_Window* window;

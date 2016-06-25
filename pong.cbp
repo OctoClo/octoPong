@@ -43,6 +43,8 @@
 			<Add library="glew32" />
 			<Add directory="E:/Informatique/Jeux/CodeBlocksProjects/Tools/lib" />
 		</Linker>
+		<Unit filename="Errors.cpp" />
+		<Unit filename="Errors.h" />
 		<Unit filename="Pong.cpp" />
 		<Unit filename="Pong.h" />
 		<Unit filename="main.cpp" />

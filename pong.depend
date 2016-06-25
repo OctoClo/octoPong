@@ -6,10 +6,8 @@
 1466704963 source:e:\informatique\bitbucket\pong\main.cpp
 	"Pong.h"
 
-1466707167 e:\informatique\bitbucket\pong\pong.h
-	<SDL/SDL.h>
-	<GL/glew.h>
-	<iostream>
+1466890640 e:\informatique\bitbucket\pong\pong.h
+	"Errors.h"
 
 1466704981 source:e:\informatique\bitbucket\pong\pong.cpp
 	"Pong.h"
@@ -341,4 +339,12 @@
 	<Availability.h>
 	<OpenGL/glu.h>
 	<GL/glu.h>
+
+1466889444 e:\informatique\bitbucket\pong\errors.h
+	<SDL/SDL.h>
+	<GL/glew.h>
+	<iostream>
+
+1466889869 source:e:\informatique\bitbucket\pong\errors.cpp
+	"Errors.h"
 
