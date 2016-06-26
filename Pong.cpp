@@ -14,32 +14,9 @@ Pong::~Pong()
 void Pong::run()
 {
     this->init();
+    this->sprite.init(-1.0, -1.0, 1.0, 1.0);
     this->gameLoop();
     this->finish();
-
-    /* // OpenGL context test
-
-
-
-    glClearColor(0,0,0,1);
-
-    SDL_GL_DeleteContext(glContext);
-
-    SDL_Surface* surface;
-    SDL_Renderer* renderer;
-
-    surface = SDL_GetWindowSurface(window);
-    renderer = SDL_CreateSoftwareRenderer(surface);
-    if (!renderer)  // Catch the eventual error
-    {
-        cout << "Error in renderer creation : " << SDL_GetError();
-        return;
-    }
-
-    SDL_SetRenderDrawColor(renderer, 0xAF, 0x00, 0xFF, 0xFF);
-    SDL_RenderClear(renderer);
-    SDL_UpdateWindowSurface(window);
-    SDL_DestroyRenderer(renderer); */
 }
 
 void Pong::init()
@@ -59,6 +36,8 @@ void Pong::init()
         fatalError("Error in OpenGL context creation");
 
     // Initiate glew
+    glewExperimental = true;
+
     if (glewInit() != GLEW_OK)
         fatalError("Error in glew init");
 
@@ -70,7 +49,7 @@ void Pong::init()
 void Pong::gameLoop()
 {
     // Process inputs while there is no exit
-    while (this->gameState != exit)
+    while (this->gameState != quit)
     {
         this->processInput();
         this-> drawGame();
@@ -85,21 +64,21 @@ void Pong::processInput()
     {
         switch (evnt.type)
         {
-        case SDL_QUIT:
-            this->gameState = exit;
-            break;
+            case SDL_QUIT:
+                this->gameState = quit;
+                break;
 
-        case SDL_MOUSEMOTION:
-            cout << evnt.motion.x << " ; " << evnt.motion.y << endl; // Display x and y coordinates
-            break;
+            case SDL_MOUSEMOTION:
+                cout << evnt.motion.x << " ; " << evnt.motion.y << endl; // Display x and y coordinates
+                break;
 
-        case SDL_KEYDOWN:
-            if (evnt.key.keysym.sym == SDLK_ESCAPE)
-                this->gameState = exit;
-            break;
+            case SDL_KEYDOWN:
+                if (evnt.key.keysym.sym == SDLK_ESCAPE)
+                    this->gameState = quit;
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
     }
 }
@@ -109,6 +88,7 @@ void Pong::drawGame()
     glClearDepth(1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    this->sprite.draw();
 
     SDL_GL_SwapWindow(this->window);
 }

@@ -1,6 +1,6 @@
 #include "Errors.h"
 
-void fatalError(string error)
+void fatalError(const string error)
 {
     char key;
 
@@ -14,5 +14,5 @@ void fatalError(string error)
     // Quit everything SDL created
     SDL_Quit();
 
-    // exit(1);
+    exit(1);
 }

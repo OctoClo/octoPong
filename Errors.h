@@ -2,11 +2,12 @@
 #define ERRORS_H
 
 #include <SDL/SDL.h>
-#include <GL/glew.h>
+
+#include <cstdlib>
 
 #include <iostream>
 using namespace std;
 
-void fatalError(string);
+void fatalError(const string);
 
 #endif // ERRORS_H

@@ -1,16 +1,22 @@
 #ifndef PONG_H
 #define PONG_H
 
-#include "Errors.h"
+#define GLEW_STATIC
 
-enum GameState { play, exit };
+#include <SDL/SDL.h>
+#include <GL/glew.h>
+
+#include "Errors.h"
+#include "Sprite.h"
+
+enum GameState { play, quit };
 
 class Pong
 {
     public:
         Pong();
-        void run();
         ~Pong();
+        void run();
 
     private:
         void init();
@@ -23,6 +29,7 @@ class Pong
         int screenWidth;
         int screenHeight;
         GameState gameState;
+        Sprite sprite;
 };
 
 #endif // PONG_H
