@@ -1,10 +1,11 @@
 #ifndef PONG_H
 #define PONG_H
 
-#define GLEW_STATIC
-
 #include <SDL/SDL.h>
-#include <GL/glew.h>
+#include <SDL/SDL_ttf.h>
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
+#include <SDL/SDL_net.h>
 
 #include "Errors.h"
 #include "Sprite.h"
@@ -23,7 +24,7 @@ class Pong
         void gameLoop();
         void processInput();
         void drawGame();
-        void finish();
+        void cleanExit();
 
         int screenWidth;
         int screenHeight;

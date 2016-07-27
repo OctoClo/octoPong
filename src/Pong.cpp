@@ -16,19 +16,39 @@ void Pong::run()
 {
     this->init();
     this->gameLoop();
-    this->finish();
+    this->cleanExit();
 }
 
 void Pong::init()
 {
-    // Initialize everything needed by SDL, catch the eventual error
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-        fatalError("Error in SDL init");
+    // Initialize SDL (video)
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+		fatalError("Error during SDL initialization");
 
-    // Open the window
-    this->window = SDL_CreateWindow("Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->screenWidth, this->screenHeight, SDL_WINDOW_OPENGL);
-    if (!window)
-        fatalError("Error in window creation");
+	// Initialize SDL_ttf
+	if (TTF_Init() != 0)
+		fatalError("Error during SDL_ttf initialization", TTF);
+
+	// Initialize SDL_image (JPG and PNG support)
+	int imageFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+	int imageBitmask = IMG_Init(imageFlags);
+	if ((imageBitmask & imageFlags) != imageFlags)
+		fatalError("Error during SDL_image initialization", IMG);
+
+	// Initialize SDL_mixer (MP3 support)
+	int mixerFlags = MIX_INIT_MP3;
+	int mixerBitmask = Mix_Init(mixerFlags);
+	if ((mixerBitmask & mixerFlags) != mixerFlags)
+		fatalError("Error during SDL_mixer initialization", MIX);
+
+	// Initialize SDL_net
+	if (SDLNet_Init() != 0)
+		fatalError("Error during SDL_net initialization", NET);
+
+	// Open the window
+	window = SDL_CreateWindow("OctoPong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->screenWidth, this->screenHeight, SDL_WINDOW_OPENGL);
+	if (!window)
+		fatalError("Error during window creation");
 }
 
 void Pong::gameLoop()
@@ -73,12 +93,16 @@ void Pong::drawGame()
 
 }
 
-void Pong::finish()
+void Pong::cleanExit()
 {
     // Destroy the window
-    SDL_DestroyWindow(window);
-    window = nullptr;
+	SDL_DestroyWindow(this->window);
+	window = nullptr;
 
-    // Quit everything SDL created
-    SDL_Quit();
+	// Quit every SDL subsystem and SDL
+	SDLNet_Quit();
+	Mix_Quit();
+	IMG_Quit();
+	TTF_Quit();
+	SDL_Quit();
 }

@@ -1,10 +1,6 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#define GLEW_STATIC
-
-#include <GL/glew.h>
-
 class Sprite
 {
     public:

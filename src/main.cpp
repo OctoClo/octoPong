@@ -5,5 +5,5 @@ int main (int argc, char** argv)
     Pong pong;
     pong.run();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
