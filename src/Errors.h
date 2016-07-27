@@ -6,7 +6,6 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_net.h>
-
 #include <cstdlib>
 
 #include <iostream>

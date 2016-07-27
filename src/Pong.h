@@ -8,7 +8,7 @@
 #include <SDL/SDL_net.h>
 
 #include "Errors.h"
-#include "Sprite.h"
+#include "Ball.h"
 
 enum GameState { PLAY, QUIT };
 
@@ -28,9 +28,11 @@ class Pong
 
         int screenWidth;
         int screenHeight;
-        SDL_Window* window;
         GameState gameState;
-        Sprite sprite;
+        SDL_Window* window;
+        SDL_Surface* windowSurface;
+        SDL_Renderer* windowRenderer;
+        Ball* ball;
 };
 
 #endif // PONG_H

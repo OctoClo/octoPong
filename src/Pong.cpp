@@ -3,9 +3,11 @@
 Pong::Pong():
     screenWidth(400),
     screenHeight(300),
-    window(nullptr),
     gameState(PLAY),
-    sprite()
+    window(NULL),
+    windowSurface(NULL),
+    windowRenderer(NULL),
+    ball(NULL)
 {}
 
 Pong::~Pong()
@@ -45,10 +47,22 @@ void Pong::init()
 	if (SDLNet_Init() != 0)
 		fatalError("Error during SDL_net initialization", NET);
 
-	// Open the window
-	window = SDL_CreateWindow("OctoPong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->screenWidth, this->screenHeight, SDL_WINDOW_OPENGL);
-	if (!window)
+	// Open window
+	this->window = SDL_CreateWindow("OctoPong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->screenWidth, this->screenHeight, SDL_WINDOW_OPENGL);
+	if (!this->window)
 		fatalError("Error during window creation");
+
+    // Link surface to window
+    this->windowSurface = SDL_GetWindowSurface(this->window);
+
+    // Create renderer for window
+    this->windowRenderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
+    if (!this->windowRenderer)
+        fatalError("Error during render creation");
+
+    // Initialize ball
+    this->ball = new Ball();
+    this->ball->init(200, 150, 10);
 }
 
 void Pong::gameLoop()
@@ -90,14 +104,26 @@ void Pong::processInput()
 
 void Pong::drawGame()
 {
+    // Color screen in black
+    SDL_FillRect(this->windowSurface, NULL, SDL_MapRGB(this->windowSurface->format, 0x00, 0x00, 0x00 ));
 
+    // Draw ball
+    ball->draw(this->windowRenderer);
+
+    // Udpate screen
+    SDL_RenderPresent(this->windowRenderer);
+    // SDL_UpdateWindowSurface(this->window);
 }
 
 void Pong::cleanExit()
 {
-    // Destroy the window
+    // Destroy renderer
+    SDL_DestroyRenderer(this->windowRenderer);
+    this->windowRenderer = NULL;
+
+    // Destroy window
 	SDL_DestroyWindow(this->window);
-	window = nullptr;
+	this->window = NULL;
 
 	// Quit every SDL subsystem and SDL
 	SDLNet_Quit();
