@@ -18,7 +18,6 @@ class Sprite
         float y;
         float width;
         float height;
-        GLuint vertexBufferObjectID;
 };
 
 #endif // SPRITE_H

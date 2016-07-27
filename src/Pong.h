@@ -9,7 +9,7 @@
 #include "Errors.h"
 #include "Sprite.h"
 
-enum GameState { play, quit };
+enum GameState { PLAY, QUIT };
 
 class Pong
 {
@@ -25,9 +25,9 @@ class Pong
         void drawGame();
         void finish();
 
-        SDL_Window* window;
         int screenWidth;
         int screenHeight;
+        SDL_Window* window;
         GameState gameState;
         Sprite sprite;
 };
