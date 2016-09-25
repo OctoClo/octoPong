@@ -1,12 +1,12 @@
 #include "Errors.h"
 
-void fatalError(const string error, enum librairyError librairy)
+void fatalError(const string error, enum libraryError library)
 {
     // Print error
     cerr << error << " : ";
 
 	// Print details
-	switch (librairy)
+	switch (library)
 	{
 	case SDL:
 		cerr << SDL_GetError();
@@ -28,9 +28,6 @@ void fatalError(const string error, enum librairyError librairy)
 	    cerr << SDLNet_GetError();
 		break;
 	}
-
-    // Print the error
-    cout << error << " : " << SDL_GetError() << endl;
 
     exit(EXIT_FAILURE);
 }

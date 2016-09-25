@@ -16,7 +16,7 @@ class Pong
 {
     public:
         Pong();
-        ~Pong();
+        ~Pong() {}
         void run();
 
     private:

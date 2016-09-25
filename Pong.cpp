@@ -10,10 +10,6 @@ Pong::Pong():
     ball(NULL)
 {}
 
-Pong::~Pong()
-{
-}
-
 void Pong::run()
 {
     this->init();
@@ -88,7 +84,7 @@ void Pong::processInput()
                 break;
 
             case SDL_MOUSEMOTION:
-                cout << evnt.motion.x << " ; " << evnt.motion.y << endl; // Display x and y coordinates
+                //cout << evnt.motion.x << " ; " << evnt.motion.y << endl; // Display x and y coordinates
                 break;
 
             case SDL_KEYDOWN:

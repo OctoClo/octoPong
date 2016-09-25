@@ -12,7 +12,7 @@ class Ball
 {
     public:
         Ball();
-        ~Ball();
+        ~Ball() {};
         void init(int, int, int);
         void draw(SDL_Renderer*);
 

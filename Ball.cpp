@@ -6,8 +6,6 @@ Ball::Ball():
     radius(0)
 {}
 
-Ball::~Ball() {}
-
 void Ball::init(int newXCenter, int newYCenter, int newRadius)
 {
     this->xCenter = newXCenter;

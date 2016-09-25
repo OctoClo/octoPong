@@ -11,8 +11,8 @@
 #include <iostream>
 using namespace std;
 
-enum librairyError { SDL, TTF, IMG, MIX, NET };
+enum libraryError { SDL, TTF, IMG, MIX, NET };
 
-void fatalError(const string, enum librairyError = SDL);
+void fatalError(const string, enum libraryError = SDL);
 
 #endif // ERRORS_H
