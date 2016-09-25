@@ -7,7 +7,7 @@ Ball::Ball(int newXCenter, int newYCenter, int newRadius):
 
 void Ball::draw(SDL_Renderer* renderer)
 {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // Set color to white
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
     // Draw the ball (circle)
     for (int y = yCenter - radius ; y < yCenter + radius ; y++)
@@ -18,6 +18,4 @@ void Ball::draw(SDL_Renderer* renderer)
             SDL_RenderDrawPoint(renderer, x, y);
         }
     }
-
-    SDL_RenderPresent(renderer);
 }

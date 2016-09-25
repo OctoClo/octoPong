@@ -5,9 +5,13 @@
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
 
+#include <sstream>
+#include <cmath>
+
 #include "Errors.h"
 #include "Ball.h"
 #include "Paddle.h"
+#include "Texture.h"
 
 enum GameState { PLAY, QUIT };
 
@@ -24,6 +28,9 @@ class Pong
         void processInput();
         void drawGame();
         void cleanExit();
+        bool loadMedia();
+        void calculateFPS();
+        void renderFPS();
 
         int screenWidth;
         int screenHeight;
@@ -34,6 +41,11 @@ class Pong
         Ball* ball;
         Paddle* paddleL;
         Paddle* paddleR;
+        TTF_Font* font;
+        SDL_Color* textColor;
+        stringstream timeText;
+        Texture FPSTexture;
+        int countedFrames;
 };
 
 #endif // PONG_H
