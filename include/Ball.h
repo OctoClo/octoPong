@@ -3,17 +3,12 @@
 
 #include <SDL/SDL.h>
 #include <cmath>
-#include <cstdlib>
-
-#include <iostream>
-using namespace std;
 
 class Ball
 {
     public:
-        Ball();
+        Ball(int, int, int);
         ~Ball() {};
-        void init(int, int, int);
         void draw(SDL_Renderer*);
 
     private:

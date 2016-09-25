@@ -19,14 +19,6 @@ void fatalError(const string error, enum libraryError library)
 	case IMG:
 	    cerr << IMG_GetError();
 		break;
-
-	case MIX:
-	    cerr << Mix_GetError();
-		break;
-
-	case NET:
-	    cerr << SDLNet_GetError();
-		break;
 	}
 
     exit(EXIT_FAILURE);

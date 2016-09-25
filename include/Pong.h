@@ -4,11 +4,10 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_net.h>
 
 #include "Errors.h"
 #include "Ball.h"
+#include "Paddle.h"
 
 enum GameState { PLAY, QUIT };
 
@@ -33,6 +32,8 @@ class Pong
         SDL_Surface* windowSurface;
         SDL_Renderer* windowRenderer;
         Ball* ball;
+        Paddle* paddleL;
+        Paddle* paddleR;
 };
 
 #endif // PONG_H
