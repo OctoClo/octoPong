@@ -3,11 +3,9 @@
 Pong::Pong():
     screenWidth(400),
     screenHeight(300),
-    gameState(PLAY),
     window(NULL),
-    windowSurface(NULL),
     windowRenderer(NULL),
-    ball(NULL)
+    gameState(PLAY)
 {}
 
 void Pong::run()
@@ -37,27 +35,21 @@ void Pong::init()
 	if (!window)
 		fatalError("Error during window creation");
 
-    windowSurface = SDL_GetWindowSurface(window);
-
     windowRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!windowRenderer)
         fatalError("Error during render creation");
 
-    if (!loadMedia())
-        fatalError("Error during font loading", TTF);
+    //if (!loadMedia())
+    //    fatalError("", );
 
-    textColor = new SDL_Color();
-    textColor->r = 255;
-    textColor->g = 255;
-    textColor->b = 255;
-    textColor->a = 255;
-
-    countedFrames = 0;
-
-    ball = new Ball(screenWidth / 2, screenHeight / 2, 5);
+    ball = new Ball(screenWidth / 2, screenHeight / 2, windowRenderer);
 
     paddleL = new Paddle(10, 125, 10, 50);
     paddleR = new Paddle(380, 125, 10, 50);
+
+    fontPath = "./resources/Dosis-Regular.otf";
+
+    fpsCounter = new FPSCounter(screenWidth / 4, 20, fontPath, 15, 255, 255, 255);
 }
 
 void Pong::gameLoop()
@@ -65,9 +57,8 @@ void Pong::gameLoop()
     while (gameState != QUIT)
     {
         processInput();
-        calculateFPS();
-        drawGame();
-        countedFrames++;
+        update();
+        render();
     }
 }
 
@@ -95,19 +86,19 @@ void Pong::processInput()
                     break;
 
                 case SDLK_z:
-                    paddleL->movePaddle(UP);
+                    paddleL->update(UP);
                     break;
 
                 case SDLK_s:
-                    paddleL->movePaddle(DOWN);
+                    paddleL->update(DOWN);
                     break;
 
                 case SDLK_UP:
-                    paddleR->movePaddle(UP);
+                    paddleR->update(UP);
                     break;
 
                 case SDLK_DOWN:
-                    paddleR->movePaddle(DOWN);
+                    paddleR->update(DOWN);
                     break;
                 }
                 break;
@@ -118,26 +109,26 @@ void Pong::processInput()
     }
 }
 
-void Pong::drawGame()
+void Pong::update()
+{
+    fpsCounter->update();
+}
+
+void Pong::render()
 {
     SDL_SetRenderDrawColor(windowRenderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(windowRenderer);
 
-    ball->draw(windowRenderer);
-    paddleL->draw(windowRenderer);
-    paddleR->draw(windowRenderer);
-    renderFPS();
+    ball->render(windowRenderer);
+    paddleL->render(windowRenderer);
+    paddleR->render(windowRenderer);
+    fpsCounter->render(windowRenderer);
 
     SDL_RenderPresent(windowRenderer);
 }
 
 void Pong::cleanExit()
 {
-    FPSTexture.free();
-
-    TTF_CloseFont(font);
-    font = NULL;
-
     SDL_DestroyRenderer(windowRenderer);
     windowRenderer = NULL;
 
@@ -151,32 +142,9 @@ void Pong::cleanExit()
 
 bool Pong::loadMedia()
 {
-    bool success = true;
-
-    font = TTF_OpenFont("D:/Font/Dosis-Regular.otf", 15);
-    if (!font)
-        success = false;
-
-    return success;
+    return true;
 }
 
-void Pong::calculateFPS()
-{
-    float averageFPS = countedFrames / (SDL_GetTicks() / 1000.f);
 
-    if (averageFPS > 2000000)
-    {
-        averageFPS = 0;
-    }
 
-    timeText.str("");
-    timeText << "Average Frames Per Second " << round(averageFPS);
-}
 
-void Pong::renderFPS()
-{
-    if (!FPSTexture.loadFromRenderedText(timeText.str(), textColor, font, windowRenderer))
-        fatalError("Unable to render FPS texture");
-
-    FPSTexture.draw(screenWidth / 4, FPSTexture.getHeight(), windowRenderer);
-}

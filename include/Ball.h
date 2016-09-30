@@ -4,17 +4,21 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
+#include "Texture.h"
+#include "Errors.h"
+
 class Ball
 {
     public:
-        Ball(int, int, int);
-        ~Ball() {};
-        void draw(SDL_Renderer*);
+        Ball(int, int, SDL_Renderer*);
+        ~Ball();
+        void render(SDL_Renderer*);
 
     private:
         int xCenter;
         int yCenter;
-        int radius;
+        const int radius = 5;
+        Texture texture;
 };
 
 #endif // BALL_H

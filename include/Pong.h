@@ -2,16 +2,14 @@
 #define PONG_H
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
-#include <SDL/SDL_image.h>
 
-#include <sstream>
-#include <cmath>
+#include <string>
 
 #include "Errors.h"
 #include "Ball.h"
 #include "Paddle.h"
 #include "Texture.h"
+#include "FPSCounter.h"
 
 enum GameState { PLAY, QUIT };
 
@@ -26,26 +24,24 @@ class Pong
         void init();
         void gameLoop();
         void processInput();
-        void drawGame();
+        void update();
+        void render();
         void cleanExit();
         bool loadMedia();
-        void calculateFPS();
-        void renderFPS();
 
         int screenWidth;
         int screenHeight;
-        GameState gameState;
         SDL_Window* window;
-        SDL_Surface* windowSurface;
         SDL_Renderer* windowRenderer;
+
+        GameState gameState;
+
         Ball* ball;
         Paddle* paddleL;
         Paddle* paddleR;
-        TTF_Font* font;
-        SDL_Color* textColor;
-        stringstream timeText;
-        Texture FPSTexture;
-        int countedFrames;
+
+        FPSCounter* fpsCounter;
+        string fontPath;
 };
 
 #endif // PONG_H

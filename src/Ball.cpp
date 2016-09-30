@@ -1,21 +1,19 @@
 #include "Ball.h"
 
-Ball::Ball(int newXCenter, int newYCenter, int newRadius):
+Ball::Ball(int newXCenter, int newYCenter, SDL_Renderer* renderer):
     xCenter(newXCenter),
-    yCenter(newYCenter),
-    radius(newRadius) {}
-
-void Ball::draw(SDL_Renderer* renderer)
+    yCenter(newYCenter)
 {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    if (!texture.createImageTexture("./resources/Ball.png", renderer))
+        fatalError("Error during ball texture creation", IMG);
+}
 
-    // Draw the ball (circle)
-    for (int y = yCenter - radius ; y < yCenter + radius ; y++)
-    {
-        int rx = (int) sqrt(this->radius * radius - ( y - yCenter) * ( y - yCenter));
-        for (int x = xCenter - rx ; x < xCenter + rx ; x++)
-        {
-            SDL_RenderDrawPoint(renderer, x, y);
-        }
-    }
+Ball::~Ball()
+{
+    texture.free();
+}
+
+void Ball::render(SDL_Renderer* renderer)
+{
+    texture.render(xCenter - radius, yCenter - radius, renderer);
 }

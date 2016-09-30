@@ -13,7 +13,7 @@ Paddle::Paddle(int newX, int newY, int newWidth, int newHeight):
     paddleRect->h = height;
 }
 
-void Paddle::draw(SDL_Renderer* renderer)
+void Paddle::render(SDL_Renderer* renderer)
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
@@ -22,7 +22,7 @@ void Paddle::draw(SDL_Renderer* renderer)
     SDL_RenderDrawRect(renderer, paddleRect);
 }
 
-void Paddle::movePaddle(enum directionPaddle direction)
+void Paddle::update(enum directionPaddle direction)
 {
     switch (direction)
     {

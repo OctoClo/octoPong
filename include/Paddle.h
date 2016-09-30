@@ -10,8 +10,8 @@ class Paddle
     public:
         Paddle(int, int, int, int);
         ~Paddle() {}
-        void draw(SDL_Renderer*);
-        void movePaddle(enum directionPaddle);
+        void render(SDL_Renderer*);
+        void update(enum directionPaddle);
 
     private:
         int x;

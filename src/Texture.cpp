@@ -10,7 +10,41 @@ Texture::~Texture()
     free();
 }
 
-bool Texture::loadFromRenderedText(string textureText, SDL_Color* textColor, TTF_Font* font, SDL_Renderer* renderer)
+int Texture::getWidth()
+{
+	return width;
+}
+
+int Texture::getHeight()
+{
+	return height;
+}
+
+bool Texture::createImageTexture(string imagePath, SDL_Renderer* renderer)
+{
+    bool success = true;
+
+    free();
+
+	SDL_Surface* imageSurface = IMG_Load(imagePath.c_str());
+	if (!imageSurface)
+		success = false;
+
+    SDL_SetColorKey(imageSurface, SDL_TRUE, SDL_MapRGB(imageSurface->format, 0, 0xFF, 0xFF));
+
+    texture = SDL_CreateTextureFromSurface(renderer, imageSurface);
+    if (!texture)
+        success = false;
+
+    width = imageSurface->w;
+    height = imageSurface->h;
+
+    SDL_FreeSurface(imageSurface);
+
+	return success;
+}
+
+bool Texture::createTextTexture(string textureText, SDL_Color* textColor, TTF_Font* font, SDL_Renderer* renderer)
 {
 	bool success = true;
 
@@ -32,18 +66,7 @@ bool Texture::loadFromRenderedText(string textureText, SDL_Color* textColor, TTF
 	return success;
 }
 
-void Texture::free()
-{
-    if (texture != NULL)
-	{
-		SDL_DestroyTexture(texture);
-		texture = NULL;
-		width = 0;
-		height = 0;
-	}
-}
-
-void Texture::draw(int x, int y, SDL_Renderer* renderer)
+void Texture::render(int x, int y, SDL_Renderer* renderer)
 {
 	SDL_Rect* renderRect = new SDL_Rect;
 	renderRect->x = x;
@@ -54,12 +77,13 @@ void Texture::draw(int x, int y, SDL_Renderer* renderer)
 	SDL_RenderCopyEx(renderer, texture, NULL, renderRect, 0.0, NULL, SDL_FLIP_NONE);
 }
 
-int Texture::getWidth()
+void Texture::free()
 {
-	return width;
-}
-
-int Texture::getHeight()
-{
-	return height;
+    if (texture != NULL)
+	{
+		SDL_DestroyTexture(texture);
+		texture = NULL;
+		width = 0;
+		height = 0;
+	}
 }
