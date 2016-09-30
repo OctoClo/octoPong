@@ -1,16 +1,52 @@
 #include "Paddle.h"
 
-Paddle::Paddle(int newX, int newY, int newWidth, int newHeight):
+Paddle::Paddle(int newX, int newY, int newWidth, int newHeight, int screenH):
     x(newX),
     y(newY),
     width(newWidth),
-    height(newHeight)
+    height(newHeight),
+    speed(0),
+    screenHeight(screenH)
 {
+    direction = NONE;
+
     paddleRect = new SDL_Rect();
     paddleRect->x = x;
     paddleRect->y = y;
     paddleRect->w = width;
     paddleRect->h = height;
+}
+
+void Paddle::accelerate(int vel, enum paddleDirection dir)
+{
+    speed += vel;
+    direction = dir;
+}
+
+void Paddle::decelerate(int vel)
+{
+    speed -= vel;
+    if (!speed)
+        direction = NONE;
+}
+
+void Paddle::update()
+{
+    switch (direction)
+    {
+    case NONE:
+        break;
+
+    case UP:
+        if (y > 5)
+            y -= speed;
+        break;
+
+    case DOWN:
+        if (y < screenHeight - height - 5)
+            y += speed;
+        break;
+    }
 }
 
 void Paddle::render(SDL_Renderer* renderer)
@@ -20,19 +56,4 @@ void Paddle::render(SDL_Renderer* renderer)
     paddleRect->y = y;
 
     SDL_RenderDrawRect(renderer, paddleRect);
-}
-
-void Paddle::update(enum directionPaddle direction)
-{
-    switch (direction)
-    {
-    case UP:
-        if (!(y <= 5))
-            y -= 5;
-        break;
-    case DOWN:
-        if (!(y >= 245))
-            y += 5;
-        break;
-    }
 }

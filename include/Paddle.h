@@ -3,22 +3,29 @@
 
 #include <SDL/SDL.h>
 
-enum directionPaddle { UP, DOWN };
+enum paddleDirection { UP, DOWN, NONE };
 
 class Paddle
 {
     public:
-        Paddle(int, int, int, int);
+        Paddle(int, int, int, int, int);
         ~Paddle() {}
+
+        void accelerate(int, enum paddleDirection);
+        void decelerate(int);
+        void update();
         void render(SDL_Renderer*);
-        void update(enum directionPaddle);
 
     private:
         int x;
         int y;
         int width;
         int height;
+        int speed;
+        enum paddleDirection direction;
         SDL_Rect* paddleRect;
+
+        int screenHeight;
 };
 
 #endif // PADDLE_H

@@ -1,6 +1,9 @@
 #ifndef FPSCOUNTER_H
 #define FPSCOUNTER_H
 
+#include "Texture.h"
+#include "Errors.h"
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
@@ -8,14 +11,12 @@
 #include <string>
 #include <cmath>
 
-#include "Texture.h"
-#include "Errors.h"
-
 class FPSCounter
 {
     public:
         FPSCounter(int, int, string, int, int, int, int);
         ~FPSCounter();
+
         void update();
         void render(SDL_Renderer*);
 

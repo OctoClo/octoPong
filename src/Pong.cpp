@@ -42,10 +42,10 @@ void Pong::init()
     //if (!loadMedia())
     //    fatalError("", );
 
-    ball = new Ball(screenWidth / 2, screenHeight / 2, windowRenderer);
+    ball = new Ball(screenWidth / 2, screenHeight / 2, screenWidth, screenHeight, windowRenderer);
 
-    paddleL = new Paddle(10, 125, 10, 50);
-    paddleR = new Paddle(380, 125, 10, 50);
+    paddleL = new Paddle(10, 125, 10, 50, screenHeight);
+    paddleR = new Paddle(380, 125, 10, 50, screenHeight);
 
     fontPath = "./resources/Dosis-Regular.otf";
 
@@ -68,49 +68,54 @@ void Pong::processInput()
 
     while (SDL_PollEvent(&evnt))
     {
-        switch (evnt.type)
+        if (evnt.type == SDL_QUIT || (evnt.type == SDL_KEYDOWN && evnt.key.keysym.sym == SDLK_ESCAPE))
+            gameState = QUIT;
+
+        else if (evnt.type == SDL_KEYDOWN && evnt.key.repeat == 0)
         {
-            case SDL_QUIT:
-                gameState = QUIT;
+            switch (evnt.key.keysym.sym)
+            {
+            case SDLK_z:
+                paddleL->accelerate(2, UP);
                 break;
 
-            case SDL_MOUSEMOTION:
-                //cout << evnt.motion.x << " ; " << evnt.motion.y << endl; // Display x and y coordinates
+            case SDLK_s:
+                paddleL->accelerate(2, DOWN);
                 break;
 
-            case SDL_KEYDOWN:
-                switch (evnt.key.keysym.sym)
-                {
-                case SDLK_ESCAPE:
-                    gameState = QUIT;
-                    break;
-
-                case SDLK_z:
-                    paddleL->update(UP);
-                    break;
-
-                case SDLK_s:
-                    paddleL->update(DOWN);
-                    break;
-
-                case SDLK_UP:
-                    paddleR->update(UP);
-                    break;
-
-                case SDLK_DOWN:
-                    paddleR->update(DOWN);
-                    break;
-                }
+            case SDLK_UP:
+                paddleR->accelerate(2, UP);
                 break;
 
-            default:
+            case SDLK_DOWN:
+                paddleR->accelerate(2, DOWN);
                 break;
+            }
+        }
+
+        else if (evnt.type == SDL_KEYUP && evnt.key.repeat == 0)
+        {
+            switch (evnt.key.keysym.sym)
+            {
+            case SDLK_z:
+            case SDLK_s:
+                paddleL->decelerate(2);
+                break;
+
+            case SDLK_UP:
+            case SDLK_DOWN:
+                paddleR->decelerate(2);
+                break;
+            }
         }
     }
 }
 
 void Pong::update()
 {
+    ball->update();
+    paddleL->update();
+    paddleR->update();
     fpsCounter->update();
 }
 

@@ -1,15 +1,15 @@
 #ifndef PONG_H
 #define PONG_H
 
-#include <SDL/SDL.h>
-
-#include <string>
-
 #include "Errors.h"
 #include "Ball.h"
 #include "Paddle.h"
 #include "Texture.h"
 #include "FPSCounter.h"
+
+#include <SDL/SDL.h>
+
+#include <string>
 
 enum GameState { PLAY, QUIT };
 
@@ -18,7 +18,11 @@ class Pong
     public:
         Pong();
         ~Pong() {}
+
         void run();
+
+        int screenWidth;
+        int screenHeight;
 
     private:
         void init();
@@ -29,8 +33,6 @@ class Pong
         void cleanExit();
         bool loadMedia();
 
-        int screenWidth;
-        int screenHeight;
         SDL_Window* window;
         SDL_Renderer* windowRenderer;
 
