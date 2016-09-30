@@ -3,7 +3,7 @@
 
 #include "Errors.h"
 #include "Ball.h"
-#include "Paddle.h"
+#include "Player.h"
 #include "Texture.h"
 #include "FPSCounter.h"
 
@@ -30,8 +30,8 @@ class Pong
         void processInput();
         void update();
         void render();
+        void updateScores();
         void cleanExit();
-        bool loadMedia();
 
         SDL_Window* window;
         SDL_Renderer* windowRenderer;
@@ -39,8 +39,10 @@ class Pong
         GameState gameState;
 
         Ball* ball;
-        Paddle* paddleL;
-        Paddle* paddleR;
+        //Paddle* paddleL;
+        //Paddle* paddleR;
+        Player* playerL;
+        Player* playerR;
 
         FPSCounter* fpsCounter;
         string fontPath;

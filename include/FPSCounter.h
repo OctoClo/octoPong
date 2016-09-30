@@ -7,9 +7,10 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
+#include <cmath>
 #include <sstream>
 #include <string>
-#include <cmath>
+using namespace std;
 
 class FPSCounter
 {

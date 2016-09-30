@@ -3,7 +3,7 @@
 
 #include <SDL/SDL.h>
 
-enum paddleDirection { UP, DOWN, NONE };
+enum paddleDirection { UPDIR, DOWNDIR, NOTMOVING };
 
 class Paddle
 {
@@ -11,8 +11,13 @@ class Paddle
         Paddle(int, int, int, int, int);
         ~Paddle() {}
 
-        void accelerate(int, enum paddleDirection);
-        void decelerate(int);
+        int getX();
+        int getY();
+        int getWidth();
+        int getHeight();
+
+        void accelerate(enum paddleDirection);
+        void decelerate();
         void update();
         void render(SDL_Renderer*);
 

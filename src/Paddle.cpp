@@ -8,7 +8,7 @@ Paddle::Paddle(int newX, int newY, int newWidth, int newHeight, int screenH):
     speed(0),
     screenHeight(screenH)
 {
-    direction = NONE;
+    direction = NOTMOVING;
 
     paddleRect = new SDL_Rect();
     paddleRect->x = x;
@@ -17,32 +17,52 @@ Paddle::Paddle(int newX, int newY, int newWidth, int newHeight, int screenH):
     paddleRect->h = height;
 }
 
-void Paddle::accelerate(int vel, enum paddleDirection dir)
+Paddle::getX()
 {
-    speed += vel;
+    return x;
+}
+
+Paddle::getY()
+{
+    return y;
+}
+
+Paddle::getWidth()
+{
+    return width;
+}
+
+Paddle::getHeight()
+{
+    return height;
+}
+
+void Paddle::accelerate(enum paddleDirection dir)
+{
+    speed += 2;
     direction = dir;
 }
 
-void Paddle::decelerate(int vel)
+void Paddle::decelerate()
 {
-    speed -= vel;
+    speed -= 2;
     if (!speed)
-        direction = NONE;
+        direction = NOTMOVING;
 }
 
 void Paddle::update()
 {
     switch (direction)
     {
-    case NONE:
+    case NOTMOVING:
         break;
 
-    case UP:
+    case UPDIR:
         if (y > 5)
             y -= speed;
         break;
 
-    case DOWN:
+    case DOWNDIR:
         if (y < screenHeight - height - 5)
             y += speed;
         break;

@@ -2,18 +2,25 @@
 #define BALL_H
 
 #include "Texture.h"
+#include "Paddle.h"
 #include "Errors.h"
 
 #include <SDL/SDL.h>
 #include <cmath>
 
+enum SideOut { LEFTOUT, RIGHTOUT, NOTOUT };
+
 class Ball
 {
     public:
-        Ball(int, int, int, int, SDL_Renderer*);
+        Ball(int, int, SDL_Renderer*);
         ~Ball();
 
-        void update();
+        bool isOffScreen();
+        enum SideOut getSideOut();
+
+        void init();
+        void update(Paddle*, Paddle*);
         void render(SDL_Renderer*);
 
     private:
@@ -23,6 +30,9 @@ class Ball
         int speedX;
         int speedY;
         Texture texture;
+
+        bool offScreen;
+        enum SideOut sideOut;
 
         int screenWidth;
         int screenHeight;

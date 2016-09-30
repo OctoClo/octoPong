@@ -12,6 +12,7 @@ void Pong::run()
 {
     init();
     gameLoop();
+    updateScores();
     cleanExit();
 }
 
@@ -39,13 +40,10 @@ void Pong::init()
     if (!windowRenderer)
         fatalError("Error during render creation");
 
-    //if (!loadMedia())
-    //    fatalError("", );
+    ball = new Ball(screenWidth, screenHeight, windowRenderer);
 
-    ball = new Ball(screenWidth / 2, screenHeight / 2, screenWidth, screenHeight, windowRenderer);
-
-    paddleL = new Paddle(10, 125, 10, 50, screenHeight);
-    paddleR = new Paddle(380, 125, 10, 50, screenHeight);
+    playerL = new Player("Jesus", LEFTPOS, screenHeight);
+    playerR = new Player("Buddha", RIGHTPOS, screenHeight);
 
     fontPath = "./resources/Dosis-Regular.otf";
 
@@ -54,7 +52,7 @@ void Pong::init()
 
 void Pong::gameLoop()
 {
-    while (gameState != QUIT)
+    while (gameState != QUIT && !ball->isOffScreen())
     {
         processInput();
         update();
@@ -64,47 +62,25 @@ void Pong::gameLoop()
 
 void Pong::processInput()
 {
-    SDL_Event evnt;
+    SDL_Event event;
 
-    while (SDL_PollEvent(&evnt))
+    while (SDL_PollEvent(&event))
     {
-        if (evnt.type == SDL_QUIT || (evnt.type == SDL_KEYDOWN && evnt.key.keysym.sym == SDLK_ESCAPE))
+        if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
             gameState = QUIT;
 
-        else if (evnt.type == SDL_KEYDOWN && evnt.key.repeat == 0)
+        else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && event.key.repeat == 0)
         {
-            switch (evnt.key.keysym.sym)
-            {
-            case SDLK_z:
-                paddleL->accelerate(2, UP);
-                break;
-
-            case SDLK_s:
-                paddleL->accelerate(2, DOWN);
-                break;
-
-            case SDLK_UP:
-                paddleR->accelerate(2, UP);
-                break;
-
-            case SDLK_DOWN:
-                paddleR->accelerate(2, DOWN);
-                break;
-            }
-        }
-
-        else if (evnt.type == SDL_KEYUP && evnt.key.repeat == 0)
-        {
-            switch (evnt.key.keysym.sym)
+            switch (event.key.keysym.sym)
             {
             case SDLK_z:
             case SDLK_s:
-                paddleL->decelerate(2);
+                playerL->handleInput(event);
                 break;
 
             case SDLK_UP:
             case SDLK_DOWN:
-                paddleR->decelerate(2);
+                playerR->handleInput(event);
                 break;
             }
         }
@@ -113,9 +89,9 @@ void Pong::processInput()
 
 void Pong::update()
 {
-    ball->update();
-    paddleL->update();
-    paddleR->update();
+    playerL->update();
+    playerR->update();
+    ball->update(playerL->getPaddle(), playerR->getPaddle());
     fpsCounter->update();
 }
 
@@ -125,11 +101,20 @@ void Pong::render()
     SDL_RenderClear(windowRenderer);
 
     ball->render(windowRenderer);
-    paddleL->render(windowRenderer);
-    paddleR->render(windowRenderer);
+    playerL->render(windowRenderer);
+    playerR->render(windowRenderer);
     fpsCounter->render(windowRenderer);
 
     SDL_RenderPresent(windowRenderer);
+}
+
+void Pong::updateScores()
+{
+    if (ball->getSideOut() == LEFTOUT)
+        playerR->increaseScore();
+    else if (ball->getSideOut() == RIGHTOUT)
+        playerL->increaseScore();
+    gameLoop();
 }
 
 void Pong::cleanExit()
@@ -144,12 +129,6 @@ void Pong::cleanExit()
 	TTF_Quit();
 	SDL_Quit();
 }
-
-bool Pong::loadMedia()
-{
-    return true;
-}
-
 
 
 
