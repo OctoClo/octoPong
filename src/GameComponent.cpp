@@ -1,7 +1,7 @@
 #include "GameComponent.h"
 
-void GameComponent::init(int x, int y)
+void GameComponent::init(int newX, int newY)
 {
-    this->x = x;
-    this->y = y;
+    x = newX;
+    y = newY;
 }

@@ -10,9 +10,9 @@ Paddle::Paddle(int newWidth, int newHeight):
     paddleRect->h = height;
 }
 
-void Paddle::init(int x, int y)
+void Paddle::init(int newX, int newY)
 {
-    GameComponent::init(x, y);
+    GameComponent::init(newX, newY);
 
     paddleRect->x = x;
     paddleRect->y = y;

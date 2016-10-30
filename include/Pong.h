@@ -2,11 +2,8 @@
 #define PONG_H
 
 #include "GameBoard.h"
-#include "Errors.h"
-#include "Ball.h"
 #include "Player.h"
-#include "Texture.h"
-#include "FPSCounter.h"
+#include "Errors.h"
 
 #include <SDL/SDL.h>
 

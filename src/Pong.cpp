@@ -36,11 +36,11 @@ void Pong::init()
     if (!windowRenderer)
         fatalError("Error during render creation");
 
-    gameBoard = new GameBoard(screenWidth, screenHeight, windowRenderer);
-    gameBoard->init();
-
     playerL = new Player("Jesus");
     playerR = new Player("Buddha");
+
+    gameBoard = new GameBoard(screenWidth, screenHeight, windowRenderer);
+    gameBoard->init(playerL, playerR);
 
     //fontPath = "./resources/Dosis-Regular.otf";
 
@@ -80,7 +80,7 @@ void Pong::update()
     if (ballOutOfScreen != NOTOUT)
     {
         updateScores(ballOutOfScreen);
-        gameBoard->init();
+        gameBoard->init(playerL, playerR);
     }
 }
 

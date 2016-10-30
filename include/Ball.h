@@ -3,11 +3,9 @@
 
 #include "GameComponent.h"
 #include "Texture.h"
-#include "Paddle.h"
 #include "Errors.h"
 
 #include <SDL/SDL.h>
-#include <cmath>
 
 class Ball : GameComponent
 {

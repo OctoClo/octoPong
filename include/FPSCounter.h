@@ -8,8 +8,8 @@
 #include <SDL/SDL_ttf.h>
 
 #include <cmath>
-#include <sstream>
 #include <string>
+#include <sstream>
 using namespace std;
 
 class FPSCounter

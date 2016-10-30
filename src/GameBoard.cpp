@@ -1,10 +1,11 @@
 #include "GameBoard.h"
 
-GameBoard::GameBoard(int newScreenWidth, int newScreenHeight, SDL_Renderer* renderer):
+GameBoard::GameBoard(int newScreenWidth, int newScreenHeight, SDL_Renderer* newRenderer):
     screenWidth(newScreenWidth),
-    screenHeight(newScreenHeight)
+    screenHeight(newScreenHeight),
+    gameBoardHeight(screenHeight - playerTextWidth)
 {
-    this->renderer = renderer;
+    renderer = newRenderer;
 
     ball = new Ball(renderer);
     paddleL = new Paddle(10, 50);
@@ -17,8 +18,11 @@ GameBoard::~GameBoard()
     renderer = NULL;
 }
 
-void GameBoard::init()
+void GameBoard::init(Player* newPlayerL, Player* newPlayerR)
 {
+    playerL = newPlayerL;
+    playerR = newPlayerR;
+
     ball->init(screenWidth / 2, screenWidth / 2);
     ballOutOfScreen = NOTOUT;
 
@@ -29,42 +33,42 @@ void GameBoard::init()
 void GameBoard::handleInput(SDL_Event event)
 {
     if (event.type == SDL_KEYDOWN && event.key.repeat == 0)
+    {
+        switch (event.key.keysym.sym)
         {
-            switch (event.key.keysym.sym)
-            {
-            case SDLK_z:
-                paddleL->accelerate(UPDIR);
-                break;
+        case SDLK_z:
+            paddleL->accelerate(UPDIR);
+            break;
 
-            case SDLK_s:
-                paddleL->accelerate(DOWNDIR);
-                break;
+        case SDLK_s:
+            paddleL->accelerate(DOWNDIR);
+            break;
 
-            case SDLK_UP:
-                paddleR->accelerate(UPDIR);
-                break;
+        case SDLK_UP:
+            paddleR->accelerate(UPDIR);
+            break;
 
-            case SDLK_DOWN:
-                paddleR->accelerate(DOWNDIR);
-                break;
-            }
+        case SDLK_DOWN:
+            paddleR->accelerate(DOWNDIR);
+            break;
         }
+    }
 
-        else if (event.type == SDL_KEYUP && event.key.repeat == 0)
+    else if (event.type == SDL_KEYUP && event.key.repeat == 0)
+    {
+        switch (event.key.keysym.sym)
         {
-            switch (event.key.keysym.sym)
-            {
-            case SDLK_z:
-            case SDLK_s:
-                paddleL->decelerate();
-                break;
+        case SDLK_z:
+        case SDLK_s:
+            paddleL->decelerate();
+            break;
 
-            case SDLK_UP:
-            case SDLK_DOWN:
-                paddleR->decelerate();
-                break;
-            }
+        case SDLK_UP:
+        case SDLK_DOWN:
+            paddleR->decelerate();
+            break;
         }
+    }
 }
 
 enum BallOutOfScreen GameBoard::update()
@@ -79,6 +83,9 @@ enum BallOutOfScreen GameBoard::update()
     paddleR->update();
     checkPaddleOutOfScreen(paddleR);
 
+    playerL->update(renderer);
+    playerR->update(renderer);
+
     return ballOutOfScreen;
 }
 
@@ -89,7 +96,7 @@ void GameBoard::bounceBall()
     int ballRadius = ball->getRadius();
 
     // Bouncing on top & bottom of the screen
-    if (ballY + ballRadius >= screenHeight || ballY <= ballRadius)
+    if (ballY + ballRadius >= screenHeight || ballY <= playerTextWidth + ballRadius)
         ball->invertSpeedY();
 
     int paddleX = paddleL->getX();
@@ -125,7 +132,7 @@ void GameBoard::checkBallOutOfScreen()
 
 void GameBoard::checkPaddleOutOfScreen(Paddle* paddle)
 {
-    if (paddle->getY() <= 1)
+    if (paddle->getY() <= playerTextWidth + 1)
         paddle->moove(DOWNDIR);
     else if (paddle->getY() >= screenHeight - paddle->getHeight() - 1)
         paddle->moove(UPDIR);
@@ -139,6 +146,11 @@ void GameBoard::render()
     ball->render(renderer);
     paddleL->render(renderer);
     paddleR->render(renderer);
+    playerL->render(2, renderer);
+    playerR->render(screenWidth - playerR->getTextWidth() - 2, renderer);
+    SDL_RenderDrawLine(renderer, 0, playerTextWidth, screenWidth, playerTextWidth);
+    SDL_RenderDrawLine(renderer, screenWidth / 2, playerTextWidth, screenWidth / 2, screenHeight);
 
     SDL_RenderPresent(renderer);
 }
+

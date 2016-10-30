@@ -11,9 +11,9 @@ Ball::~Ball()
     texture.free();
 }
 
-void Ball::init(int x, int y)
+void Ball::init(int newX, int newY)
 {
-    GameComponent::init(x, y);
+    GameComponent::init(newX, newY);
 
     speedX = 2;
     speedY = -1;
