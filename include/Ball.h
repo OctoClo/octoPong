@@ -1,6 +1,7 @@
 #ifndef BALL_H
 #define BALL_H
 
+#include "GameComponent.h"
 #include "Texture.h"
 #include "Paddle.h"
 #include "Errors.h"
@@ -8,34 +9,28 @@
 #include <SDL/SDL.h>
 #include <cmath>
 
-enum SideOut { LEFTOUT, RIGHTOUT, NOTOUT };
-
-class Ball
+class Ball : GameComponent
 {
     public:
-        Ball(int, int, SDL_Renderer*);
+        Ball(SDL_Renderer*);
         ~Ball();
 
-        bool isOffScreen();
-        enum SideOut getSideOut();
+        int getX() { return GameComponent::getX(); }
+        int getY() { return GameComponent::getY(); }
+        int getRadius() { return radius; }
 
-        void init();
-        void update(Paddle*, Paddle*);
+        void init(int, int);
+        void update();
         void render(SDL_Renderer*);
 
+        void invertSpeedX() { speedX = -speedX; }
+        void invertSpeedY() { speedY = -speedY; }
+
     private:
-        int xCenter;
-        int yCenter;
         const int radius = 5;
         int speedX;
         int speedY;
         Texture texture;
-
-        bool offScreen;
-        enum SideOut sideOut;
-
-        int screenWidth;
-        int screenHeight;
 };
 
 #endif // BALL_H

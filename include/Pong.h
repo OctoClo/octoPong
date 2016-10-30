@@ -1,6 +1,7 @@
 #ifndef PONG_H
 #define PONG_H
 
+#include "GameBoard.h"
 #include "Errors.h"
 #include "Ball.h"
 #include "Player.h"
@@ -21,31 +22,28 @@ class Pong
 
         void run();
 
-        int screenWidth;
-        int screenHeight;
-
     private:
         void init();
         void gameLoop();
         void processInput();
         void update();
         void render();
-        void updateScores();
+        void updateScores(enum BallOutOfScreen);
         void cleanExit();
 
+        const int screenWidth = 400;
+        const int screenHeight = 300;
+
         SDL_Window* window;
-        SDL_Renderer* windowRenderer;
 
         GameState gameState;
 
-        Ball* ball;
-        //Paddle* paddleL;
-        //Paddle* paddleR;
+        GameBoard* gameBoard;
         Player* playerL;
         Player* playerR;
 
-        FPSCounter* fpsCounter;
-        string fontPath;
+        //FPSCounter* fpsCounter;
+        //string fontPath;
 };
 
 #endif // PONG_H

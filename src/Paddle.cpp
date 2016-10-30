@@ -1,40 +1,24 @@
 #include "Paddle.h"
 
-Paddle::Paddle(int newX, int newY, int newWidth, int newHeight, int screenH):
-    x(newX),
-    y(newY),
+Paddle::Paddle(int newWidth, int newHeight):
     width(newWidth),
-    height(newHeight),
-    speed(0),
-    screenHeight(screenH)
+    height(newHeight)
 {
-    direction = NOTMOVING;
-
     paddleRect = new SDL_Rect();
-    paddleRect->x = x;
-    paddleRect->y = y;
+
     paddleRect->w = width;
     paddleRect->h = height;
 }
 
-Paddle::getX()
+void Paddle::init(int x, int y)
 {
-    return x;
-}
+    GameComponent::init(x, y);
 
-Paddle::getY()
-{
-    return y;
-}
+    paddleRect->x = x;
+    paddleRect->y = y;
 
-Paddle::getWidth()
-{
-    return width;
-}
-
-Paddle::getHeight()
-{
-    return height;
+    speed = 0;
+    direction = NOTMOVING;
 }
 
 void Paddle::accelerate(enum paddleDirection dir)
@@ -50,23 +34,26 @@ void Paddle::decelerate()
         direction = NOTMOVING;
 }
 
-void Paddle::update()
+void Paddle::moove(enum paddleDirection dir)
 {
-    switch (direction)
+    switch (dir)
     {
     case NOTMOVING:
         break;
 
     case UPDIR:
-        if (y > 5)
-            y -= speed;
+        y -= speed;
         break;
 
     case DOWNDIR:
-        if (y < screenHeight - height - 5)
-            y += speed;
+        y += speed;
         break;
     }
+}
+
+void Paddle::update()
+{
+    moove(direction);
 }
 
 void Paddle::render(SDL_Renderer* renderer)

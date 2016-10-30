@@ -1,10 +1,7 @@
 #include "Pong.h"
 
 Pong::Pong():
-    screenWidth(400),
-    screenHeight(300),
     window(NULL),
-    windowRenderer(NULL),
     gameState(PLAY)
 {}
 
@@ -12,7 +9,6 @@ void Pong::run()
 {
     init();
     gameLoop();
-    updateScores();
     cleanExit();
 }
 
@@ -36,23 +32,24 @@ void Pong::init()
 	if (!window)
 		fatalError("Error during window creation");
 
-    windowRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer* windowRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!windowRenderer)
         fatalError("Error during render creation");
 
-    ball = new Ball(screenWidth, screenHeight, windowRenderer);
+    gameBoard = new GameBoard(screenWidth, screenHeight, windowRenderer);
+    gameBoard->init();
 
-    playerL = new Player("Jesus", LEFTPOS, screenHeight);
-    playerR = new Player("Buddha", RIGHTPOS, screenHeight);
+    playerL = new Player("Jesus");
+    playerR = new Player("Buddha");
 
-    fontPath = "./resources/Dosis-Regular.otf";
+    //fontPath = "./resources/Dosis-Regular.otf";
 
-    fpsCounter = new FPSCounter(screenWidth / 4, 20, fontPath, 15, 255, 255, 255);
+    //fpsCounter = new FPSCounter(screenWidth / 4, 20, fontPath, 15, 255, 255, 255);
 }
 
 void Pong::gameLoop()
 {
-    while (gameState != QUIT && !ball->isOffScreen())
+    while (gameState != QUIT)
     {
         processInput();
         update();
@@ -71,58 +68,39 @@ void Pong::processInput()
 
         else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && event.key.repeat == 0)
         {
-            switch (event.key.keysym.sym)
-            {
-            case SDLK_z:
-            case SDLK_s:
-                playerL->handleInput(event);
-                break;
-
-            case SDLK_UP:
-            case SDLK_DOWN:
-                playerR->handleInput(event);
-                break;
-            }
+            gameBoard->handleInput(event);
         }
     }
 }
 
 void Pong::update()
 {
-    playerL->update();
-    playerR->update();
-    ball->update(playerL->getPaddle(), playerR->getPaddle());
-    fpsCounter->update();
+    enum BallOutOfScreen ballOutOfScreen = gameBoard->update();
+
+    if (ballOutOfScreen != NOTOUT)
+    {
+        updateScores(ballOutOfScreen);
+        gameBoard->init();
+    }
 }
 
 void Pong::render()
 {
-    SDL_SetRenderDrawColor(windowRenderer, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(windowRenderer);
-
-    ball->render(windowRenderer);
-    playerL->render(windowRenderer);
-    playerR->render(windowRenderer);
-    fpsCounter->render(windowRenderer);
-
-    SDL_RenderPresent(windowRenderer);
+    gameBoard->render();
+    //fpsCounter->render(windowRenderer);
 }
 
-void Pong::updateScores()
+void Pong::updateScores(enum BallOutOfScreen ballOutOfScreen)
 {
-    if (ball->getSideOut() == LEFTOUT)
+    if (ballOutOfScreen == LEFTOUT)
         playerR->increaseScore();
-    else if (ball->getSideOut() == RIGHTOUT)
+    else if (ballOutOfScreen == RIGHTOUT)
         playerL->increaseScore();
-    gameLoop();
 }
 
 void Pong::cleanExit()
 {
-    SDL_DestroyRenderer(windowRenderer);
-    windowRenderer = NULL;
-
-	SDL_DestroyWindow(window);
+    SDL_DestroyWindow(window);
 	window = NULL;
 
 	IMG_Quit();

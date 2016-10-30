@@ -1,36 +1,37 @@
 #ifndef PADDLE_H
 #define PADDLE_H
 
+#include "GameComponent.h"
+
 #include <SDL/SDL.h>
 
 enum paddleDirection { UPDIR, DOWNDIR, NOTMOVING };
 
-class Paddle
+class Paddle : GameComponent
 {
     public:
-        Paddle(int, int, int, int, int);
+        Paddle(int, int);
         ~Paddle() {}
 
-        int getX();
-        int getY();
-        int getWidth();
-        int getHeight();
+        int getX() { return GameComponent::getX(); }
+        int getY() { return GameComponent::getY(); }
+        int getWidth() { return width; }
+        int getHeight() { return height; }
 
-        void accelerate(enum paddleDirection);
-        void decelerate();
+        void init(int, int);
         void update();
         void render(SDL_Renderer*);
 
+        void accelerate(enum paddleDirection);
+        void decelerate();
+        void moove(enum paddleDirection);
+
     private:
-        int x;
-        int y;
         int width;
         int height;
         int speed;
         enum paddleDirection direction;
         SDL_Rect* paddleRect;
-
-        int screenHeight;
 };
 
 #endif // PADDLE_H
