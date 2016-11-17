@@ -14,7 +14,13 @@ void Pong::run()
 
 void Pong::init()
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	initSDLSystems();
+	initObjects();
+}
+
+void Pong::initSDLSystems()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		fatalError("Error during SDL initialization");
 
 	if (TTF_Init() != 0)
@@ -28,18 +34,21 @@ void Pong::init()
 	if(!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
         fatalError("Warning : Linear texture filtering not enabled !");
 
-	window = SDL_CreateWindow("OctoPong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("OctoPong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
 	if (!window)
 		fatalError("Error during window creation");
+}
+
+void Pong::initObjects()
+{
+    playerL = new Player("Jesus");
+    playerR = new Player("Buddha");
 
     SDL_Renderer* windowRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!windowRenderer)
         fatalError("Error during render creation");
 
-    playerL = new Player("Jesus");
-    playerR = new Player("Buddha");
-
-    gameBoard = new GameBoard(screenWidth, screenHeight, windowRenderer);
+    gameBoard = new GameBoard(SCREEN_WIDTH, SCREEN_HEIGHT, windowRenderer);
     gameBoard->init(playerL, playerR);
 
     //fontPath = "./resources/Dosis-Regular.otf";
@@ -75,9 +84,9 @@ void Pong::processInput()
 
 void Pong::update()
 {
-    enum BallOutOfScreen ballOutOfScreen = gameBoard->update();
+    enum Direction ballOutOfScreen = gameBoard->update();
 
-    if (ballOutOfScreen != NOTOUT)
+    if (ballOutOfScreen != NONE)
     {
         updateScores(ballOutOfScreen);
         gameBoard->init(playerL, playerR);
@@ -90,12 +99,22 @@ void Pong::render()
     //fpsCounter->render(windowRenderer);
 }
 
-void Pong::updateScores(enum BallOutOfScreen ballOutOfScreen)
+void Pong::updateScores(enum Direction ballOutOfScreen)
 {
-    if (ballOutOfScreen == LEFTOUT)
+    switch (ballOutOfScreen)
+    {
+    case LEFT:
         playerR->increaseScore();
-    else if (ballOutOfScreen == RIGHTOUT)
+        break;
+
+    case RIGHT:
         playerL->increaseScore();
+        break;
+
+    default:
+        fatalError("Direction inattendue dans la fonction updateScores()");
+        break;
+    }
 }
 
 void Pong::cleanExit()

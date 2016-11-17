@@ -3,13 +3,13 @@
 GameBoard::GameBoard(int newScreenWidth, int newScreenHeight, SDL_Renderer* newRenderer):
     screenWidth(newScreenWidth),
     screenHeight(newScreenHeight),
-    gameBoardHeight(screenHeight - playerTextWidth)
+    gameBoardHeight(screenHeight - PLAYER_TEXT_WIDTH)
 {
     renderer = newRenderer;
 
     ball = new Ball(renderer);
-    paddleL = new Paddle(10, 50);
-    paddleR = new Paddle(10, 50);
+    paddleL = new Paddle(renderer);
+    paddleR = new Paddle(renderer);
 }
 
 GameBoard::~GameBoard()
@@ -23,8 +23,8 @@ void GameBoard::init(Player* newPlayerL, Player* newPlayerR)
     playerL = newPlayerL;
     playerR = newPlayerR;
 
-    ball->init(screenWidth / 2, screenWidth / 2);
-    ballOutOfScreen = NOTOUT;
+    ball->init((screenWidth / 2) - ball->getRadius(), (screenHeight / 2)  - ball->getRadius());
+    ballOutOfScreen = NONE;
 
     paddleL->init(10, 125);
     paddleR->init(380, 125);
@@ -37,19 +37,19 @@ void GameBoard::handleInput(SDL_Event event)
         switch (event.key.keysym.sym)
         {
         case SDLK_z:
-            paddleL->accelerate(UPDIR);
+            paddleL->accelerate(TOP);
             break;
 
         case SDLK_s:
-            paddleL->accelerate(DOWNDIR);
+            paddleL->accelerate(BOTTOM);
             break;
 
         case SDLK_UP:
-            paddleR->accelerate(UPDIR);
+            paddleR->accelerate(TOP);
             break;
 
         case SDLK_DOWN:
-            paddleR->accelerate(DOWNDIR);
+            paddleR->accelerate(BOTTOM);
             break;
         }
     }
@@ -71,11 +71,11 @@ void GameBoard::handleInput(SDL_Event event)
     }
 }
 
-enum BallOutOfScreen GameBoard::update()
+enum Direction GameBoard::update()
 {
     ball->update();
     bounceBall();
-    checkBallOutOfScreen();
+    checkBallOutOfScreen(HORIZONTAL);
 
     paddleL->update();
     checkPaddleOutOfScreen(paddleL);
@@ -89,55 +89,6 @@ enum BallOutOfScreen GameBoard::update()
     return ballOutOfScreen;
 }
 
-void GameBoard::bounceBall()
-{
-    int ballX = ball->getX();
-    int ballY = ball->getY();
-    int ballRadius = ball->getRadius();
-
-    // Bouncing on top & bottom of the screen
-    if (ballY + ballRadius >= screenHeight || ballY <= playerTextWidth + ballRadius)
-        ball->invertSpeedY();
-
-    int paddleX = paddleL->getX();
-    int paddleY = paddleL->getY();
-
-    // Bouncing on the left paddle
-    if (ballX - ballRadius <= paddleX + paddleL->getWidth() // Checking x axis
-            &&
-        ballY - ballRadius <= paddleY + paddleL->getHeight() // Checking bottom y axis
-            &&
-        ballY + ballRadius >= paddleY) // Checking top y axis
-        ball->invertSpeedX();
-
-    paddleX = paddleR->getX();
-    paddleY = paddleR->getY();
-
-    // Bouncing on the right paddle
-    if (ballX + ballRadius >= paddleX // Checking x axis
-            &&
-        ballY - ballRadius <= paddleY + paddleR->getHeight() // Checking bottom y axis
-            &&
-        ballY + ballRadius >= paddleY) // Checking top y axis
-        ball->invertSpeedX();
-}
-
-void GameBoard::checkBallOutOfScreen()
-{
-    if (ball->getX() - ball->getRadius() > screenWidth)
-        ballOutOfScreen = RIGHTOUT;
-    else if (ball->getX() + ball->getRadius() < 0)
-        ballOutOfScreen = LEFTOUT;
-}
-
-void GameBoard::checkPaddleOutOfScreen(Paddle* paddle)
-{
-    if (paddle->getY() <= playerTextWidth + 1)
-        paddle->moove(DOWNDIR);
-    else if (paddle->getY() >= screenHeight - paddle->getHeight() - 1)
-        paddle->moove(UPDIR);
-}
-
 void GameBoard::render()
 {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
@@ -148,9 +99,127 @@ void GameBoard::render()
     paddleR->render(renderer);
     playerL->render(2, renderer);
     playerR->render(screenWidth - playerR->getTextWidth() - 2, renderer);
-    SDL_RenderDrawLine(renderer, 0, playerTextWidth, screenWidth, playerTextWidth);
-    SDL_RenderDrawLine(renderer, screenWidth / 2, playerTextWidth, screenWidth / 2, screenHeight);
+
+    drawLines();
 
     SDL_RenderPresent(renderer);
+}
+
+void GameBoard::bounceBall()
+{
+    // Bouncing on top & bottom of the screen
+    if (checkBallOutOfScreen(VERTICAL))
+        ball->invertSpeedY();
+
+    // Bouncing on the left paddle
+    if (checkPaddleCollision(LEFT))
+        ball->invertSpeedX();
+
+    // Bouncing on the right paddle
+    if (checkPaddleCollision(RIGHT))
+        ball->invertSpeedX();
+}
+
+bool GameBoard::checkPaddleCollision(enum Direction direction)
+{
+    bool collision;
+
+    int ballX = ball->getX();
+    int ballY = ball->getY();
+    int ballDiameter = ball->getDiameter();
+
+    int paddleX;
+    int paddleY;
+    int paddleHeight;
+    int paddleWidth;
+
+    switch (direction)
+    {
+    case LEFT:
+        paddleX = paddleL->getX();
+        paddleY = paddleL->getY();
+        paddleHeight = paddleL->getHeight();
+        paddleWidth = paddleL->getWidth();
+
+        collision =     ballX <= paddleX + paddleWidth // Checking right x axis
+                            &&
+                        ballX + ballDiameter >= paddleX // Checking left x axis
+                            &&
+                        ballY >= paddleY // Checking top y axis
+                            &&
+                        ballY + ballDiameter <= paddleY + paddleHeight; // Checking bottom y axis
+        break;
+
+    case RIGHT:
+        paddleX = paddleR->getX();
+        paddleY = paddleR->getY();
+        paddleHeight = paddleR->getHeight();
+        paddleWidth = paddleR->getWidth();
+
+        collision =     ballX + ballDiameter >= paddleX // Checking right x axis
+                            &&
+                        ballX <= paddleX + paddleWidth
+                            &&
+                        ballY >= paddleY // Checking top y axis
+                            &&
+                        ballY + ballDiameter <= paddleY + paddleHeight; // Checking bottom y axis
+        break;
+
+    default:
+        fatalError("Direction inattendue dans la fonction checkPaddleCollision()");
+        break;
+    }
+
+    return collision;
+}
+
+bool GameBoard::checkBallOutOfScreen(enum Direction direction)
+{
+    bool ballOut = 0;
+
+    int ballX = ball->getX();
+    int ballY = ball->getY();
+
+    switch (direction)
+    {
+    case VERTICAL:
+        ballOut = ballY + ball->getDiameter() >= screenHeight || ballY <= PLAYER_TEXT_WIDTH;
+        break;
+
+    case HORIZONTAL:
+        if (ballX > screenWidth)
+        {
+            ballOut = 1;
+            ballOutOfScreen = RIGHT;
+        }
+        else if (ballX + ball->getDiameter() < 0)
+        {
+            ballOut = 1;
+            ballOutOfScreen = LEFT;
+        }
+        break;
+
+    default:
+        fatalError("Direction inattendue dans la fonction checkBallOutOfScreen()");
+        break;
+    }
+
+    return ballOut;
+}
+
+void GameBoard::checkPaddleOutOfScreen(Paddle* paddle)
+{
+    if (paddle->getY() <= PLAYER_TEXT_WIDTH + 1)
+        paddle->decelerate();
+    else if (paddle->getY() >= screenHeight - paddle->getHeight() - 1)
+        paddle->decelerate();
+}
+
+void GameBoard::drawLines()
+{
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+    SDL_RenderDrawLine(renderer, 0, PLAYER_TEXT_WIDTH, screenWidth, PLAYER_TEXT_WIDTH);
+    SDL_RenderDrawLine(renderer, screenWidth / 2, PLAYER_TEXT_WIDTH, screenWidth / 2, screenHeight);
 }
 

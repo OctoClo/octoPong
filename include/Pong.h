@@ -4,6 +4,7 @@
 #include "GameBoard.h"
 #include "Player.h"
 #include "Errors.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 
@@ -21,15 +22,17 @@ class Pong
 
     private:
         void init();
+        void initSDLSystems();
+        void initObjects();
         void gameLoop();
         void processInput();
         void update();
         void render();
-        void updateScores(enum BallOutOfScreen);
+        void updateScores(enum Direction);
         void cleanExit();
 
-        const int screenWidth = 400;
-        const int screenHeight = 300;
+        const int SCREEN_WIDTH = 400;
+        const int SCREEN_HEIGHT = 300;
 
         SDL_Window* window;
 

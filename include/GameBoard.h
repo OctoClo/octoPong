@@ -4,10 +4,12 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "Player.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 
-enum BallOutOfScreen { LEFTOUT, RIGHTOUT, NOTOUT };
+#include <iostream>
+using namespace std;
 
 class GameBoard
 {
@@ -17,13 +19,16 @@ class GameBoard
 
         void init(Player*, Player*);
         void handleInput(SDL_Event);
-        enum BallOutOfScreen update();
+        enum Direction update();
         void render();
 
     private:
         void bounceBall();
-        void checkBallOutOfScreen();
+        bool checkPaddleCollision(enum Direction);
+        bool checkBallOutOfScreen(enum Direction);
         void checkPaddleOutOfScreen(Paddle*);
+
+        void drawLines();
 
         Ball* ball;
         Paddle* paddleL;
@@ -33,11 +38,11 @@ class GameBoard
 
         SDL_Renderer* renderer;
 
-        enum BallOutOfScreen ballOutOfScreen;
+        enum Direction ballOutOfScreen;
 
         int screenWidth;
         int screenHeight;
-        const int playerTextWidth = 25;
+        const int PLAYER_TEXT_WIDTH = 25;
         int gameBoardHeight;
 };
 

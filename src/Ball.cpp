@@ -1,15 +1,8 @@
 #include "Ball.h"
 
-Ball::Ball(SDL_Renderer* renderer)
-{
-    if (!texture.createImageTexture("./resources/Ball.png", renderer))
-        fatalError("Error during ball texture creation", IMG);
-}
-
-Ball::~Ball()
-{
-    texture.free();
-}
+Ball::Ball(SDL_Renderer* renderer):
+    GameComponent(renderer, "./resources/Ball.png")
+{}
 
 void Ball::init(int newX, int newY)
 {
@@ -23,9 +16,4 @@ void Ball::update()
 {
     x += speedX;
     y += speedY;
-}
-
-void Ball::render(SDL_Renderer* renderer)
-{
-    texture.render(x - radius, y - radius, renderer);
 }

@@ -1,24 +1,33 @@
 #ifndef GAMECOMPONENT_H
 #define GAMECOMPONENT_H
 
+#include "Texture.h"
+#include "Errors.h"
+
 #include <SDL/SDL.h>
+
+#include <string>
 
 class GameComponent
 {
     public:
-        GameComponent() {}
-        virtual ~GameComponent() {}
+        GameComponent(SDL_Renderer*, string);
+        virtual ~GameComponent();
 
-        virtual int getX() { return x; }
-        virtual int getY() { return y; }
+        int getX() { return x; }
+        int getY() { return y; }
+        int getWidth();
+        int getHeight();
 
         virtual void init(int, int);
         virtual void update() = 0;
-        virtual void render(SDL_Renderer*) = 0;
+        void render(SDL_Renderer*);
 
     protected:
         int x;
         int y;
+
+        Texture texture;
 };
 
 #endif // GAMECOMPONENT_H
