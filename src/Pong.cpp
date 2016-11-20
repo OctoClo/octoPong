@@ -58,7 +58,7 @@ void Pong::initObjects()
 
 void Pong::gameLoop()
 {
-    while (gameState != QUIT)
+    while (gameState != QUITT)
     {
         processInput();
         update();
@@ -73,7 +73,7 @@ void Pong::processInput()
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
-            gameState = QUIT;
+            gameState = QUITT;
 
         else if ((event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) && event.key.repeat == 0)
         {

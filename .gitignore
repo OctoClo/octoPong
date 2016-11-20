@@ -3,3 +3,4 @@ obj/
 *.layout
 *.cbp
 *.depend
+*.cscope_file_list

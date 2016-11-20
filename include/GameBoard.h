@@ -1,10 +1,10 @@
 #ifndef GAMEBOARD_H
 #define GAMEBOARD_H
 
-#include "Ball.h"
-#include "Paddle.h"
-#include "Player.h"
-#include "Utils.h"
+#include "../include/content/Ball.h"
+#include "../include/content/Paddle.h"
+#include "../include/content/Player.h"
+#include "../include/Utils.h"
 
 #include <SDL/SDL.h>
 

@@ -2,7 +2,7 @@
 #define PONG_H
 
 #include "GameBoard.h"
-#include "Player.h"
+#include "../include/content/Player.h"
 #include "Errors.h"
 #include "Utils.h"
 
@@ -10,7 +10,7 @@
 
 #include <string>
 
-enum GameState { PLAY, QUIT };
+enum GameState { PLAY, QUITT };
 
 class Pong
 {
