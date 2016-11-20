@@ -46,24 +46,22 @@ bool Texture::createImageTexture(string imagePath, SDL_Renderer* renderer)
 
 bool Texture::createTextTexture(string textureText, SDL_Color* textColor, TTF_Font* font, SDL_Renderer* renderer)
 {
-	bool success = true;
-
 	free();
 
 	SDL_Surface* textSurface = TTF_RenderText_Solid(font, textureText.c_str(), *textColor);
 	if (!textSurface)
-        success = false;
+        return false;
 
     texture = SDL_CreateTextureFromSurface(renderer, textSurface);
     if (!texture)
-        success = false;
+        return false;
 
     width = textSurface->w;
     height = textSurface->h;
 
     SDL_FreeSurface(textSurface);
 
-	return success;
+	return true;
 }
 
 void Texture::render(int x, int y, SDL_Renderer* renderer)

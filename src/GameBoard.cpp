@@ -83,8 +83,8 @@ enum Direction GameBoard::update()
     paddleR->update();
     checkPaddleOutOfScreen(paddleR);
 
-    playerL->update(renderer);
-    playerR->update(renderer);
+    playerL->update();
+    playerR->update();
 
     return ballOutOfScreen;
 }

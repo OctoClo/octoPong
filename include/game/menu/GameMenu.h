@@ -1,17 +1,19 @@
 #ifndef GAMEMENU_H
 #define GAMEMENU_H
 
+#include "Utils.h"
+
 #include <SDL/SDL.h>
 
 class GameMenu
 {
     public:
-        GameMenu();
+        GameMenu(SDL_Renderer*);
         ~GameMenu() {}
 
         void init();
         void handleEvents(SDL_Event);
-        int update();
+        enum Step update();
         void render(SDL_Renderer*);
 
     private:

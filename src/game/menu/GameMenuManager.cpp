@@ -1,27 +1,8 @@
 #include "../../../include/game/menu/GameMenuManager.h"
 
-GameMenuManager* GameMenuManager::instance = NULL;
-
-GameMenuManager* GameMenuManager::getInstance()
+GameMenuManager::GameMenuManager(SDL_Renderer* renderer)
 {
-    if (!instance)
-        instance = new GameMenuManager();
-
-    return instance;
-}
-
-void GameMenuManager::killInstance()
-{
-    if (instance)
-    {
-        delete instance;
-        instance = NULL;
-    }
-}
-
-GameMenuManager::GameMenuManager()
-{
-    menu = new GameMenu();
+    menu = new GameMenu(renderer);
 }
 
 void GameMenuManager::launch()
@@ -34,7 +15,7 @@ void GameMenuManager::handleEvents(SDL_Event event)
     menu->handleEvents(event);
 }
 
-int GameMenuManager::update()
+enum Step GameMenuManager::update()
 {
     return menu->update();
 }
@@ -42,4 +23,23 @@ int GameMenuManager::update()
 void GameMenuManager::render(SDL_Renderer* renderer)
 {
     menu->render(renderer);
+}
+
+GameMenuManager* GameMenuManager::instance = NULL;
+
+GameMenuManager* GameMenuManager::getInstance(SDL_Renderer* renderer)
+{
+    if (!instance)
+        instance = new GameMenuManager(renderer);
+
+    return instance;
+}
+
+void GameMenuManager::killInstance()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
+    }
 }

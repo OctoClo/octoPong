@@ -1,4 +1,3 @@
-#include "Pong.h"
 #include "MainManager.h"
 
 #include <iostream>
@@ -6,9 +5,6 @@ using namespace std;
 
 int main (int argc, char** argv)
 {
-    /*Pong pong;
-    pong.run();*/
-
     MainManager* manager = MainManager::getInstance();
     SDL_Event event;
 

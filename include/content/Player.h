@@ -19,10 +19,13 @@ class Player
         ~Player();
 
         int getTextWidth();
+        int getScore();
+        string getName();
 
         void increaseScore();
-        void update(SDL_Renderer*);
+        void update();
         void render(int, SDL_Renderer*);
+        void reset();
 
     private:
         string name;

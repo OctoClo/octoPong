@@ -3,6 +3,8 @@
 
 enum Direction { LEFT, RIGHT, TOP, BOTTOM, HORIZONTAL, VERTICAL, NONE };
 
+enum Step { MENU, MENU_MAIN, GAME, GAME_MAIN, GAME_MENU, QUIT };
+
 class Utils
 {
     public :

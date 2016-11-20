@@ -1,31 +1,12 @@
 #include "MainManager.h"
 
-MainManager* MainManager::instance = NULL;
-
-MainManager* MainManager::getInstance()
-{
-    if (!instance)
-        instance = new MainManager();
-
-    return instance;
-}
-
-void MainManager::killInstance()
-{
-    if (instance)
-    {
-        delete instance;
-        instance = NULL;
-    }
-}
-
 MainManager::MainManager():
     renderer(NULL)
 {
     initSDLSystems();
 
-    menuManager = MenuManager::getInstance();
-    gameManager = GameManager::getInstance();
+    menuManager = MenuManager::getInstance(renderer);
+    gameManager = GameManager::getInstance(renderer);
 
     setStep(MENU);
 }
@@ -64,7 +45,7 @@ void MainManager::handleEvents(SDL_Event event)
             gameManager->handleEvents(event);
             break;
 
-        case QUIT:
+        default:
             break;
         }
     }
@@ -72,24 +53,31 @@ void MainManager::handleEvents(SDL_Event event)
 
 void MainManager::update()
 {
-    int returnValue;
+    Step returnStep;
 
     switch (step)
     {
     case MENU:
-        returnValue = menuManager->update();
+        returnStep = menuManager->update();
+        if (returnStep != MENU)
+        {
+            setStep(returnStep);
+            cout << "Switched to GAME" << endl;
+        }
         break;
 
     case GAME:
-        returnValue = gameManager->update();
+        returnStep = gameManager->update();
+        if (returnStep != GAME)
+        {
+            setStep(returnStep);
+            cout << "Switched to MENU" << endl;
+        }
         break;
 
-    case QUIT:
+    default:
         break;
     }
-
-    if (!returnValue)
-        setStep(QUIT);
 }
 
 void MainManager::render()
@@ -107,14 +95,14 @@ void MainManager::render()
         gameManager->render(renderer);
         break;
 
-    case QUIT:
+    default:
         break;
     }
 
     SDL_RenderPresent(renderer);
 }
 
-void MainManager::setStep(enum MainStep newStep)
+void MainManager::setStep(enum Step newStep)
 {
     step = newStep;
 
@@ -128,12 +116,12 @@ void MainManager::setStep(enum MainStep newStep)
         gameManager->launch();
         break;
 
-    case QUIT:
+    default:
         break;
     }
 }
 
-enum MainStep MainManager::getStep()
+enum Step MainManager::getStep()
 {
     return step;
 }
@@ -161,4 +149,23 @@ void MainManager::initSDLSystems()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer)
         fatalError("Error during render creation");
+}
+
+MainManager* MainManager::instance = NULL;
+
+MainManager* MainManager::getInstance()
+{
+    if (!instance)
+        instance = new MainManager();
+
+    return instance;
+}
+
+void MainManager::killInstance()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
+    }
 }

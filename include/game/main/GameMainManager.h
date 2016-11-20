@@ -2,27 +2,28 @@
 #define GAMEMAINMANAGER_H
 
 #include "GameMain.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 
 class GameMainManager
 {
     public:
-        static GameMainManager* getInstance();
-        static void killInstance();
-
         void launch();
         void handleEvents(SDL_Event);
-        int update();
-        void render(SDL_Renderer*); // Vraiment besoin du renderer là ?
+        enum Step update();
+        void render(SDL_Renderer*);
+
+        static GameMainManager* getInstance(SDL_Renderer*);
+        static void killInstance();
 
     private:
-        GameMainManager();
+        GameMainManager(SDL_Renderer*);
         ~GameMainManager() {}
 
-        static GameMainManager* instance;
-
         GameMain* game;
+
+        static GameMainManager* instance;
 };
 
 #endif // GAMEMAINMANAGER_H

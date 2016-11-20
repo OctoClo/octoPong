@@ -3,34 +3,35 @@
 
 #include "../../include/game/main/GameMainManager.h"
 #include "../../include/game/menu/GameMenuManager.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 
-enum GameStep { GAME_MAIN, GAME_MENU };
+#include <iostream>
+using namespace std;
 
 class GameManager
 {
     public:
-        static GameManager* getInstance();
-        static void killInstance();
-
-        void setStep(enum GameStep);
-
         void launch();
         void handleEvents(SDL_Event);
-        int update();
+        enum Step update();
         void render(SDL_Renderer*);
 
+        static GameManager* getInstance(SDL_Renderer*);
+        static void killInstance();
+
     private:
-        GameManager();
+        GameManager(SDL_Renderer*);
         ~GameManager();
 
-        static GameManager* instance;
+        void setStep(enum Step);
 
-        enum GameStep step;
-
+        enum Step step;
         GameMainManager* gameMainManager;
         GameMenuManager* gameMenuManager;
+
+        static GameManager* instance;
 };
 
 #endif // GAMEMANAGER_H

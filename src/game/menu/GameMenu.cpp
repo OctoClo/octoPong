@@ -1,6 +1,6 @@
 #include "../../../include/game/menu/GameMenu.h"
 
-GameMenu::GameMenu()
+GameMenu::GameMenu(SDL_Renderer* renderer)
 {}
 
 void GameMenu::init()
@@ -13,9 +13,9 @@ void GameMenu::handleEvents(SDL_Event event)
 
 }
 
-int GameMenu::update()
+enum Step GameMenu::update()
 {
-    return 1;
+    return GAME_MENU;
 }
 
 void GameMenu::render(SDL_Renderer* renderer)

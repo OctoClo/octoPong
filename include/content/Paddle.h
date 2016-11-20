@@ -19,9 +19,10 @@ class Paddle : public GameComponent
         void accelerate(enum Direction);
         void decelerate();
 
-    private:
-        void moove(enum Direction);
+        void goDown();
+        void goUp();
 
+    private:
         int speed;
         enum Direction direction;
 };

@@ -1,27 +1,8 @@
 #include "../../../include/game/main/GameMainManager.h"
 
-GameMainManager* GameMainManager::instance = NULL;
-
-GameMainManager* GameMainManager::getInstance()
+GameMainManager::GameMainManager(SDL_Renderer* renderer)
 {
-    if (!instance)
-        instance = new GameMainManager();
-
-    return instance;
-}
-
-void GameMainManager::killInstance()
-{
-    if (instance)
-    {
-        delete instance;
-        instance = NULL;
-    }
-}
-
-GameMainManager::GameMainManager()
-{
-    game = new GameMain();
+    game = new GameMain(renderer);
 }
 
 void GameMainManager::launch()
@@ -34,7 +15,7 @@ void GameMainManager::handleEvents(SDL_Event event)
     game->handleEvents(event);
 }
 
-int GameMainManager::update()
+enum Step GameMainManager::update()
 {
     return game->update();
 }
@@ -44,4 +25,22 @@ void GameMainManager::render(SDL_Renderer* renderer)
     game->render(renderer);
 }
 
+GameMainManager* GameMainManager::instance = NULL;
+
+GameMainManager* GameMainManager::getInstance(SDL_Renderer* renderer)
+{
+    if (!instance)
+        instance = new GameMainManager(renderer);
+
+    return instance;
+}
+
+void GameMainManager::killInstance()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
+    }
+}
 

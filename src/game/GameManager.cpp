@@ -1,28 +1,9 @@
 #include "../../include/game/GameManager.h"
 
-GameManager* GameManager::instance = NULL;
-
-GameManager* GameManager::getInstance()
+GameManager::GameManager(SDL_Renderer* renderer)
 {
-    if (!instance)
-        instance = new GameManager();
-
-    return instance;
-}
-
-void GameManager::killInstance()
-{
-    if (instance)
-    {
-        delete instance;
-        instance = NULL;
-    }
-}
-
-GameManager::GameManager()
-{
-    gameMainManager = GameMainManager::getInstance();
-    gameMenuManager = GameMenuManager::getInstance();
+    gameMainManager = GameMainManager::getInstance(renderer);
+    gameMenuManager = GameMenuManager::getInstance(renderer);
 }
 
 GameManager::~GameManager()
@@ -49,25 +30,44 @@ void GameManager::handleEvents(SDL_Event event)
     case GAME_MENU:
         gameMenuManager->handleEvents(event);
         break;
+
+    default:
+        break;
     }
 }
 
-int GameManager::update()
+enum Step GameManager::update()
 {
-    int returnValue;
+    enum Step returnStep;
 
     switch (step)
     {
     case GAME_MAIN:
-        returnValue = gameMainManager->update();
+        returnStep = gameMainManager->update();
+        if (returnStep == GAME_MENU)
+        {
+            setStep(returnStep);
+            cout << "Switched to GAME_MENU" << endl;
+        }
         break;
 
     case GAME_MENU:
-        returnValue = gameMenuManager->update();
+        returnStep = gameMenuManager->update();
+        if (returnStep == GAME_MAIN)
+        {
+            setStep(returnStep);
+            cout << "Switched to GAME_MENU" << endl;
+        }
+        break;
+
+    default:
         break;
     }
 
-    return returnValue;
+    if (returnStep != QUIT && returnStep != MENU)
+        returnStep = GAME;
+
+    return returnStep;
 }
 
 void GameManager::render(SDL_Renderer* renderer)
@@ -81,10 +81,13 @@ void GameManager::render(SDL_Renderer* renderer)
     case GAME_MENU:
         gameMenuManager->render(renderer);
         break;
+
+    default:
+        break;
     }
 }
 
-void GameManager::setStep(enum GameStep newStep)
+void GameManager::setStep(enum Step newStep)
 {
     step = newStep;
 
@@ -97,6 +100,27 @@ void GameManager::setStep(enum GameStep newStep)
     case GAME_MENU:
         gameMenuManager->launch();
         break;
+
+    default:
+        break;
     }
 }
 
+GameManager* GameManager::instance = NULL;
+
+GameManager* GameManager::getInstance(SDL_Renderer* renderer)
+{
+    if (!instance)
+        instance = new GameManager(renderer);
+
+    return instance;
+}
+
+void GameManager::killInstance()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
+    }
+}

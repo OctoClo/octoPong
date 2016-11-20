@@ -24,28 +24,33 @@ void Paddle::decelerate()
     direction = NONE;
 }
 
-void Paddle::moove(enum Direction dir)
+void Paddle::goDown()
 {
-    switch (dir)
+    y += speed;
+}
+
+void Paddle::goUp()
+{
+    y -= speed;
+}
+
+void Paddle::update()
+{
+    switch (direction)
     {
     case NONE:
         break;
 
     case TOP:
-        y -= speed;
+        goUp();
         break;
 
     case BOTTOM:
-        y += speed;
+        goDown();
         break;
 
     default:
-        fatalError("Direction inattendue dans la fonction moove()");
+        fatalError("Direction inattendue dans la fonction update() de Paddle");
         break;
     }
-}
-
-void Paddle::update()
-{
-    moove(direction);
 }

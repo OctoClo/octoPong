@@ -2,27 +2,28 @@
 #define MENUMAINMANAGER_H
 
 #include "MenuMain.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 
 class MenuMainManager
 {
     public:
-        static MenuMainManager* getInstance();
-        static void killInstance();
-
         void launch();
         void handleEvents(SDL_Event);
-        int update();
-        void render(SDL_Renderer*); // Vraiment besoin du renderer là ?
+        enum Step update();
+        void render(SDL_Renderer*);
+
+        static MenuMainManager* getInstance(SDL_Renderer* renderer);
+        static void killInstance();
 
     private:
-        MenuMainManager();
+        MenuMainManager(SDL_Renderer* renderer);
         ~MenuMainManager() {}
 
-        static MenuMainManager* instance;
-
         MenuMain* menu;
+
+        static MenuMainManager* instance;
 };
 
 #endif // MENUMAINMANAGER_H

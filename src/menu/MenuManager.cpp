@@ -1,27 +1,8 @@
 #include "../../include/menu/MenuManager.h"
 
-MenuManager* MenuManager::instance = NULL;
-
-MenuManager* MenuManager::getInstance()
+MenuManager::MenuManager(SDL_Renderer* renderer)
 {
-    if (!instance)
-        instance = new MenuManager();
-
-    return instance;
-}
-
-void MenuManager::killInstance()
-{
-    if (instance)
-    {
-        delete instance;
-        instance = NULL;
-    }
-}
-
-MenuManager::MenuManager()
-{
-    menuMainManager = MenuMainManager::getInstance();
+    menuMainManager = MenuMainManager::getInstance(renderer);
 }
 
 MenuManager::~MenuManager()
@@ -42,21 +23,29 @@ void MenuManager::handleEvents(SDL_Event event)
     case MENU_MAIN:
         menuMainManager->handleEvents(event);
         break;
+
+    default:
+        break;
     }
 }
 
-int MenuManager::update()
+enum Step MenuManager::update()
 {
-    int returnValue;
+    Step returnStep;
 
     switch (step)
     {
     case MENU_MAIN:
-        returnValue = menuMainManager->update();
+        returnStep = menuMainManager->update();
+        if (returnStep == MENU_MAIN)
+            returnStep = MENU; // Si d'autres états, cf GameManager
+        break;
+
+    default:
         break;
     }
 
-    return returnValue;
+    return returnStep;
 }
 
 void MenuManager::render(SDL_Renderer* renderer)
@@ -66,10 +55,13 @@ void MenuManager::render(SDL_Renderer* renderer)
     case MENU_MAIN:
         menuMainManager->render(renderer);
         break;
+
+    default:
+        break;
     }
 }
 
-void MenuManager::setStep(enum MenuStep newStep)
+void MenuManager::setStep(enum Step newStep)
 {
     step = newStep;
 
@@ -78,6 +70,28 @@ void MenuManager::setStep(enum MenuStep newStep)
     case MENU_MAIN:
         menuMainManager->launch();
         break;
+
+    default:
+        break;
+    }
+}
+
+MenuManager* MenuManager::instance = NULL;
+
+MenuManager* MenuManager::getInstance(SDL_Renderer* renderer)
+{
+    if (!instance)
+        instance = new MenuManager(renderer);
+
+    return instance;
+}
+
+void MenuManager::killInstance()
+{
+    if (instance)
+    {
+        delete instance;
+        instance = NULL;
     }
 }
 

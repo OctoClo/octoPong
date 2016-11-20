@@ -2,27 +2,28 @@
 #define GAMEMENUMANAGER_H
 
 #include "GameMenu.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 
 class GameMenuManager
 {
     public:
-        static GameMenuManager* getInstance();
-        static void killInstance();
-
         void launch();
         void handleEvents(SDL_Event);
-        int update();
-        void render(SDL_Renderer*); // Vraiment besoin du renderer là ?
+        enum Step update();
+        void render(SDL_Renderer*);
+
+        static GameMenuManager* getInstance(SDL_Renderer*);
+        static void killInstance();
 
     private:
-        GameMenuManager();
+        GameMenuManager(SDL_Renderer*);
         ~GameMenuManager() {}
 
-        static GameMenuManager* instance;
-
         GameMenu* menu;
+
+        static GameMenuManager* instance;
 };
 
 #endif // GAMEMENUMANAGER_H

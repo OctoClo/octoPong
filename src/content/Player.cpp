@@ -16,6 +16,9 @@ Player::Player(string newName):
     textColor->g = 255;
     textColor->b = 255;
     textColor->a = 255;
+
+    text.str("");
+    text << name << " : " << score;
 }
 
 Player::~Player()
@@ -31,21 +34,35 @@ int Player::getTextWidth()
     return textTexture.getWidth();
 }
 
+int Player::getScore()
+{
+    return score;
+}
+
+string Player::getName()
+{
+    return name;
+}
+
 void Player::increaseScore()
 {
     score++;
 }
 
-void Player::update(SDL_Renderer* renderer)
+void Player::update()
 {
     text.str("");
     text << name << " : " << score;
-
-    if (!textTexture.createTextTexture(text.str(), textColor, textFont, renderer))
-        fatalError("Unable to create FPS texture");
 }
 
 void Player::render(int x, SDL_Renderer* renderer)
 {
+    if (!textTexture.createTextTexture(text.str(), textColor, textFont, renderer))
+        fatalError("Unable to create FPS texture");
     textTexture.render(x, 2, renderer);
+}
+
+void Player::reset()
+{
+    score = 0;
 }
