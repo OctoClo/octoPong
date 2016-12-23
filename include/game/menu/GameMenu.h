@@ -1,11 +1,12 @@
 #ifndef GAMEMENU_H
 #define GAMEMENU_H
 
+#include "Menu.h"
 #include "Utils.h"
 
 #include <SDL/SDL.h>
 
-class GameMenu
+class GameMenu : public Menu
 {
     public:
         GameMenu(SDL_Renderer*);

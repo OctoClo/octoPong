@@ -1,10 +1,11 @@
 #ifndef GAMEMAIN_H
 #define GAMEMAIN_H
 
-#include "Utils.h"
+#include "Menu.h"
 #include "content/Ball.h"
 #include "content/Paddle.h"
 #include "content/Player.h"
+#include "Utils.h"
 
 #include <SDL/SDL.h>
 

@@ -15,12 +15,14 @@ class GameComponent
         virtual ~GameComponent();
 
         int getX() { return x; }
+        void setX(int newX) { x = newX; }
         int getY() { return y; }
+        void setY(int newY) { y = newY; }
         int getWidth();
         int getHeight();
 
         virtual void init(int, int);
-        virtual void update() = 0;
+        virtual void update() {}
         void render(SDL_Renderer*);
 
     protected:

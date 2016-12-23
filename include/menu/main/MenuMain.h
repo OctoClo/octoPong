@@ -1,11 +1,16 @@
 #ifndef MENUMAIN_H
 #define MENUMAIN_H
 
+#include "Menu.h"
+#include "Button.h"
 #include "Utils.h"
 
 #include <SDL/SDL.h>
 
-class MenuMain
+#include <iostream>
+using namespace std;
+
+class MenuMain : public Menu
 {
     public:
         MenuMain(SDL_Renderer* renderer);
@@ -17,7 +22,12 @@ class MenuMain
         void render(SDL_Renderer*);
 
     private:
+        void updateButtonSelection();
 
+        int selection;
+        int launched;
+
+        GameComponent* buttonSelection;
 };
 
 #endif // MENUMAIN_H
