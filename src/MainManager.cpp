@@ -60,19 +60,13 @@ void MainManager::update()
     case MENU:
         returnStep = menuManager->update();
         if (returnStep == GAME)
-        {
             setStep(returnStep);
-            cout << "Switched to GAME" << endl;
-        }
         break;
 
     case GAME:
         returnStep = gameManager->update();
         if (returnStep == MENU)
-        {
             setStep(returnStep);
-            cout << "Switched to MENU" << endl;
-        }
         break;
 
     default:

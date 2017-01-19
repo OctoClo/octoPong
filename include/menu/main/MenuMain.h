@@ -13,7 +13,7 @@ using namespace std;
 class MenuMain : public Menu
 {
     public:
-        MenuMain(SDL_Renderer* renderer);
+        MenuMain(SDL_Renderer*);
         ~MenuMain() {}
 
         void init();
